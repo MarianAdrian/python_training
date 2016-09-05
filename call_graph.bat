@@ -1,0 +1,1 @@
+python2.bat "subject8\call_graph.py subject8\example.txt"

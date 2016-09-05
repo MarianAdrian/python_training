@@ -1,0 +1,21 @@
+CREATEVAR:v1
+CREATEVAR:v2
+CREATEVAR:v3
+SETVAR:v1:1
+SETVAR:v2:66
+SETVAR:v3:77
+CREATEFCT:calculate
+;implement formula
+CALCULATE:v1:sin(v1+v2+v3/v2+v3)
+CALCULATE:v2:sin(v2+v3)
+ENDFCT:calculate
+;create the plot to show
+CREATEPLOT:myplot
+ADDTOPLOT:myplot:0:0
+CALL:calculate
+ADDTOPLOT:myplot:0:v1
+CALL:calculate
+ADDTOPLOT:myplot:1:v1
+CALL:calculate
+ADDTOPLOT:myplot:2:v1
+SHOWPLOT:myplot
