@@ -2,6 +2,8 @@ import sys
 from math import sin
 
 from variable import Variable
+from myplot import MyPlot
+
 __rules = [
     'CREATEVAR',
     'SETVAR',
@@ -13,6 +15,7 @@ __rules = [
     'ENDFCT',
     'CALL']
 __variables = Variable()
+__plots = MyPlot()
     
 def get_rule(line):
     error = 0
