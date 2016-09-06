@@ -1,4 +1,5 @@
 import sys
+from math import sin
 
 from variable import Variable
 __rules = [
@@ -37,6 +38,8 @@ def implement_rule(line, rule):
         __variables.CreateVar((line.split(':')[1]).split('\n')[0])
     elif rule == 'SETVAR':
         __variables.SetVar(line.split(':')[1], (line.split(':')[2]).split('\n')[0])
+    elif rule == 'CALCULATE':
+        __variables.Calculate(line.split(':')[1], (line.split(':')[2]).split('\n')[0])
 
 if __name__ == '__main__':
     
