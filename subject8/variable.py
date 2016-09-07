@@ -4,7 +4,7 @@ from math import *
 class Variable(object):
     variables = {}
     def __init__(self):
-        self.Variable_globals = globals()
+        self.Variable_globals = {}
     def CreateVar(self, name):
         if name in Variable.variables.keys():
             sys.exit('multiple definition for ' + name + '!!!')

@@ -22,14 +22,12 @@ class MyPlot(object):
         #
         #test.show()
         #plt.show()
-        pass
     def CreatePlot(self, plot_name):
         if plot_name in MyPlot.plots:
             sys.exit('multiple plot definition for ' + name + '!!!')
         else:
             MyPlot.plots.append(plot_name)
             self.MyPlot_globals[plot_name] = plt
-            #print globals().keys()
     def AddToPlot(self, plot_name, plot_x, plot_y):
         if plot_name in MyPlot.plots:
             if plot_x in self.MyPlot_globals.keys():
@@ -42,6 +40,7 @@ class MyPlot(object):
                 y = float(plot_y)
             self.MyPlot_globals[plot_name].plot(x, y)
         else:
-            sys.exit('no such plot created ' + name + ' when setting variable!!!')
+            sys.exit('no such plot created ' + name + ' when adding to plot!!!')
     def ShowPlot(self, plot_name):
+        #self.MyPlot_globals[plot_name].xlim(-4.0, 4.0)
         self.MyPlot_globals[plot_name].show()
