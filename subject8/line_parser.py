@@ -86,9 +86,6 @@ class LineParser(object):
                 LineParser.__functions.CreateFunction((self.line.split(':')[1]).split('\n')[0])
             elif self.rule_in_line == 'CALL':
                 LineParser.__functions.CallFunction((self.line.split(':')[1]).split('\n')[0])
-                print 'v1 = ' + str(Variable.variables['v1'])
-                print 'v2 = ' + str(Variable.variables['v2'])
-                print 'v3 = ' + str(Variable.variables['v3'])
             else:
                 pass
         else:
