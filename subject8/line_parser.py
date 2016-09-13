@@ -5,25 +5,21 @@ from myplot import MyPlot
 
 class Function(object):
     functions = {}
-    __parsed_lines = None
-    def __init__(self, globals):
-        self.Function_globals = globals    #add global variables and plots
+    def __init__(self):
+        pass
     def CreateFunction(self, name):
-        #print 'YAY'
         if name in Function.functions.keys():
             sys.exit('multiple definition for function ' + name + '!!!')
         else:
             Function.functions.update({name:{}})
             Function.functions[name].update({'operations':[]})
-            #self.Variable_globals[name] = ''
     def EndFunction(self, name):
         pass
     def CallFunction(self, name):
         for operation in Function.functions[name]['operations']:
-            #Function.__parsed_lines = LineParser(operation)
-            #Function.__parsed_lines.get_rule()
-            #Function.__parsed_lines.implement_rule()
-            print operation
+            __parsed_line = LineParser(operation)
+            __parsed_line.get_rule()
+            __parsed_line.implement_rule()
     def AddToFunction(self, name, operation):
         if name in Function.functions.keys():
             Function.functions[name]['operations'].append(operation)
@@ -42,14 +38,17 @@ class LineParser(object):
         'ENDFCT',
         'CALL']
     __function_create_start = None
-    __variables = None
-    __plots = None
-    __functions = None
+    __variables = Variable()
+    __plots = MyPlot()
+    __functions = Function()
 
     def __init__(self, line):
         self.line = line
         self.error = 0
         self.rule_in_line = ''
+
+    def update_globals(self, globals):
+        pass
     def get_rule(self):
         for __rule in LineParser.__rules:
             __location = -1
@@ -68,66 +67,43 @@ class LineParser(object):
     def implement_rule(self):
         if LineParser.__function_create_start == None:
             if self.rule_in_line == 'CREATEVAR':
-                if LineParser.__variables == None:
-                    LineParser.__variables = Variable()
                 LineParser.__variables.CreateVar((self.line.split(':')[1]).split('\n')[0])
+                MyPlot.UpdateGlobals(Variable.variables)
             elif self.rule_in_line == 'SETVAR':
-                if LineParser.__variables == None:
-                    LineParser.__variables = Variable()
                 LineParser.__variables.SetVar(self.line.split(':')[1], (self.line.split(':')[2]).split('\n')[0])
+                MyPlot.UpdateGlobals(Variable.variables)
             elif self.rule_in_line == 'CALCULATE':
-                if LineParser.__variables == None:
-                    LineParser.__variables = Variable()
                 LineParser.__variables.Calculate(self.line.split(':')[1], (self.line.split(':')[2]).split('\n')[0])
+                MyPlot.UpdateGlobals(Variable.variables)
             elif self.rule_in_line == 'CREATEPLOT':
-                if LineParser.__plots == None:
-                    LineParser.__plots = MyPlot(LineParser.__variables.Variable_globals)
                 LineParser.__plots.CreatePlot((self.line.split(':')[1]).split('\n')[0])
             elif self.rule_in_line == 'ADDTOPLOT':
-                if LineParser.__plots == None:
-                    LineParser.__plots = MyPlot(LineParser.__variables.Variable_globals)
                 LineParser.__plots.AddToPlot(self.line.split(':')[1], self.line.split(':')[2], (self.line.split(':')[3]).split('\n')[0])
             elif self.rule_in_line == 'SHOWPLOT':
-                if LineParser.__plots == None:
-                    LineParser.__plots = MyPlot(LineParser.__variables.Variable_globals)
                 LineParser.__plots.ShowPlot((self.line.split(':')[1]).split('\n')[0])
             elif self.rule_in_line == 'CREATEFCT':
-                if LineParser.__functions == None:
-                    LineParser.__functions = Function(LineParser.__variables.Variable_globals.update({}))
                 LineParser.__function_create_start = (self.line.split(':')[1]).split('\n')[0]
                 LineParser.__functions.CreateFunction((self.line.split(':')[1]).split('\n')[0])
             elif self.rule_in_line == 'CALL':
-                if LineParser.__functions == None:
-                    LineParser.__functions = Function()
                 LineParser.__functions.CallFunction((self.line.split(':')[1]).split('\n')[0])
+                print 'v1 = ' + str(Variable.variables['v1'])
+                print 'v2 = ' + str(Variable.variables['v2'])
+                print 'v3 = ' + str(Variable.variables['v3'])
             else:
                 pass
         else:
             if self.rule_in_line == 'CREATEVAR':
-                if LineParser.__functions == None:
-                    LineParser.__functions = Function(LineParser.__variables.Variable_globals.update(LineParser.__plots.MyPlot_globals))
                 LineParser.__functions.AddToFunction(LineParser.__function_create_start, self.line)
             elif self.rule_in_line == 'SETVAR':
-                if LineParser.__functions == None:
-                   LineParser.__functions = Function(LineParser.__variables.Variable_globals.update(LineParser.__plots.MyPlot_globals))
                 LineParser.__functions.AddToFunction(LineParser.__function_create_start, self.line)
             elif self.rule_in_line == 'CALCULATE':
-                if LineParser.__functions == None:
-                    LineParser.__functions = Function(LineParser.__variables.Variable_globals.update(LineParser.__plots.MyPlot_globals))
                 LineParser.__functions.AddToFunction(LineParser.__function_create_start, self.line)
             elif self.rule_in_line == 'CREATEPLOT':
-                if LineParser.__functions == None:
-                    LineParser.__functions = Function(LineParser.__variables.Variable_globals.update(LineParser.__plots.MyPlot_globals))
                 LineParser.__functions.AddToFunction(LineParser.__function_create_start, self.line)
             elif self.rule_in_line == 'ADDTOPLOT':
-                if LineParser.__functions == None:
-                    LineParser.__functions = Function()
+                LineParser.__functions = Function()
                 LineParser.__functions.AddToFunction(LineParser.__function_create_start, self.line)
             elif self.rule_in_line == 'SHOWPLOT':
-                if LineParser.__functions == None:
-                    LineParser.__functions = Function(LineParser.__variables.Variable_globals.update(LineParser.__plots.MyPlot_globals))
                 LineParser.__functions.AddToFunction(LineParser.__function_create_start, self.line)
             elif self.rule_in_line == 'ENDFCT':
-                if LineParser.__functions == None:
-                    LineParser.__functions = Function(LineParser.__variables.Variable_globals.update(LineParser.__plots.MyPlot_globals))
                 LineParser.__function_create_start = None
